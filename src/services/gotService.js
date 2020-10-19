@@ -20,18 +20,40 @@ export default class gotService {
         const character = await this.getResource(`/characters/${id}`);
         return this._transformCharacter(character);
     }
-    getAllBooks() {
-        return this.getResource('/books?page=5&pageSize=10');
+    async getAllBooks() {
+        const res = await this.getResource('/books/');
+        return res.map(this._transformBook);
     }
-    getBook(id) {
-        return this.getResource(`/books/${id}`);
+    async getBook(id) {
+        const book = await this.getResource(`/books/${id}`);
+        return this._transformBook(book);
     }
-    getAllHouses() {
-        return this.getResource('/houses?page=5&pageSize=10');
+    async getAllHouses() {
+        const res = await this.getResource('/houses/');
+        return res.map(this._transformHouse);
     }
-    getHouse(id) {
-        return this.getResource(`/houses/${id}`);
+    async getHouse(id) {
+        const house = await this.getResource(`/houses/${id}`);
+        return this._transformHouse(house);
     }
+
+    isSet(data) {
+        if (data) {
+            return data;
+        } else {
+            return 'unknown';
+        }
+    }
+
+    /* _transformCharacter(char) {
+        return {
+            name: this.isSet(char.name),
+            gender: this.isSet(char.gender),
+            born: this.isSet(char.born),
+            died: this.isSet(char.died),
+            culture: this.isSet(char.culture)
+        };
+    } */
 
     _transformCharacter(char) {
         return {
@@ -40,7 +62,7 @@ export default class gotService {
             born: char.born,
             died: char.died,
             culture: char.culture
-        }
+        };
     }
 
     _transformHouse(house) {
@@ -51,7 +73,7 @@ export default class gotService {
             titles: house.titles,
             overlord: house.overlord,
             ancestralWeapons: house.ancestralWeapons
-        }
+        };
     }
 
     _transformBook(book) {
@@ -60,7 +82,8 @@ export default class gotService {
             numberOfPages: book.numberOfPages,
             publisher: book.publisher,
             released: book.released
-        }
+        };
     }
+
 }
 
