@@ -21,7 +21,7 @@ export default class ItemList extends Component {
             .then( (charList) => {
                 this.setState({
                     charList
-                })
+                });
             })
 
     }
@@ -32,7 +32,7 @@ export default class ItemList extends Component {
                 <li 
                     key={index}
                     className="list-group-item"
-                    onClick={this.props.onCharSelected(index)}>
+                    onClick={ () => this.props.onCharSelected(41 + index)}>
                     {item.name}
                 </li>
             )
@@ -40,7 +40,6 @@ export default class ItemList extends Component {
     }
 
     render() {
-
         const {charList} = this.state;
 
         if (!charList) {
