@@ -37,7 +37,7 @@ export default class gotService {
         return this._transformHouse(house);
     }
 
-    isSet(data) {
+    /* isSet(data) {
         if (data) {
             return data;
         } else {
@@ -45,7 +45,7 @@ export default class gotService {
         }
     }
 
-    /* _transformCharacter(char) {
+     _transformCharacter(char) {
         return {
             name: this.isSet(char.name),
             gender: this.isSet(char.gender),

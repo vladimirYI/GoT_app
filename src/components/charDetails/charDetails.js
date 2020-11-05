@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import styled from 'styled-components';
 import gotService from '../../services/gotService';
+import Spinner from '../spinner';
+import ErrorMessage from '../errorMessage';
+
 
 const CharDetailsBlock = styled.div`
     background-color: #fff;
@@ -22,6 +25,7 @@ export default class CharDetails extends Component {
 
     state = {
         char: null,
+        error: false,
         loading: true
     }
 
@@ -35,6 +39,13 @@ export default class CharDetails extends Component {
         }
     }
 
+    onError = () => {
+        this.setState({
+            error: true,
+            loading: false
+        })
+    }
+
     updateChar() {
         const {charId} = this.props;
         if(!charId) {
@@ -43,21 +54,41 @@ export default class CharDetails extends Component {
 
         this.gotService.getCharacter(charId)
             .then((char) => {
-                this.setState({char, loading:false})
+                this.setState({char, loading: false})
             })
+            .catch(this.onError)
     }
 
     render() {
-        if(!this.state.char) {
-            return <span className='select-error'>Please select a character</span>     
-        }
+        const {char, error, loading} = this.state; 
 
-        const {name, gender, born, died, culture} = this.state.char;
+        const errorMessage = error ? <ErrorMessage/> : null;
+        const spinner = loading ? <Spinner/> : null;
+        const items = !(loading || errorMessage) ? <View char ={char}/> : null;
+
+        /* if (!this.state.char) {
+            return <Spinner/>
+        } */
+
+        /* if(!this.state.char) {
+            return <span className='select-error'>Please select a character</span>     
+        } */
 
         return (
             <CharDetailsBlock className="rounded">
-                
-                <h4>{name}</h4>
+               {errorMessage}
+               {spinner}
+               {items}
+            </CharDetailsBlock>
+        );
+    }
+}
+
+const View = ({char}) => {
+    const {name, gender, born, died, culture} = char;
+    return (
+        <>
+             <h4>{name}</h4>
                 <ul className="list-group list-group-flush">
                     <li className="list-group-item d-flex justify-content-between">
                         <CharDetailsSpan>Gender</CharDetailsSpan>
@@ -76,7 +107,6 @@ export default class CharDetails extends Component {
                         <span>{culture}</span>
                     </li>
                 </ul>
-            </CharDetailsBlock>
-        );
-    }
+        </>
+    )
 }

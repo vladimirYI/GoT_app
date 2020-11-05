@@ -42,10 +42,10 @@ export default class RandomChar extends Component {
             loading: false})
     }
 
-    onError = (err) => {
+    onError = () => {
         this.setState({
             error: true,
-            loading:false
+            loading: false
         })
     }
 
