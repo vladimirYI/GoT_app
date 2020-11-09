@@ -19,6 +19,19 @@ const CharDetailsSpan = styled.span`
     font-weight: bold;
 `;
 
+const Field = ({char, field, label}) => {
+    return (
+        <li className="list-group-item d-flex justify-content-between">
+            <CharDetailsSpan>{label}</CharDetailsSpan>
+            <span>{char[field]}</span>
+        </li>
+    )
+}
+
+export {
+    Field
+}
+
 export default class CharDetails extends Component {
 
     gotService = new gotService(); 
@@ -39,10 +52,17 @@ export default class CharDetails extends Component {
         }
     }
 
+    onCharDetailsLoaded = (char) => {
+        this.setState({
+            char,
+            loading: false
+        })
+    }
+
     onError = () => {
         this.setState({
             error: true,
-            loading: false
+            char: null
         })
     }
 
@@ -52,61 +72,45 @@ export default class CharDetails extends Component {
             return;
         }
 
+        this.setState({
+            loading: true
+        })
+
         this.gotService.getCharacter(charId)
-            .then((char) => {
-                this.setState({char, loading: false})
-            })
+            .then(this.onCharDetailsLoaded)
             .catch(this.onError)
     }
 
     render() {
-        const {char, error, loading} = this.state; 
 
-        const errorMessage = error ? <ErrorMessage/> : null;
-        const spinner = loading ? <Spinner/> : null;
-        const items = !(loading || errorMessage) ? <View char ={char}/> : null;
+        if (!this.state.char && this.state.error) {
+            return <ErrorMessage/>
+        } else if (!this.state.char) {
+            return <span className="select-error">Please select a character</span>
+        }
 
-        /* if (!this.state.char) {
-            return <Spinner/>
-        } */
+        const {char} = this.state;
+        const {name} = char;
 
-        /* if(!this.state.char) {
-            return <span className='select-error'>Please select a character</span>     
-        } */
+        if (this.state.loading) {
+            return (
+                <CharDetailsBlock className="rounded">
+                    <Spinner/>
+                </CharDetailsBlock>
+            )
+        }
 
         return (
             <CharDetailsBlock className="rounded">
-               {errorMessage}
-               {spinner}
-               {items}
+                <h4>{name}</h4>
+                <ul className="list-group list-group-flush">
+                   {
+                       React.Children.map(this.props.children, (child) => {
+                            return React.cloneElement(child, {char})
+                       })
+                   }
+                </ul>
             </CharDetailsBlock>
         );
     }
-}
-
-const View = ({char}) => {
-    const {name, gender, born, died, culture} = char;
-    return (
-        <>
-             <h4>{name}</h4>
-                <ul className="list-group list-group-flush">
-                    <li className="list-group-item d-flex justify-content-between">
-                        <CharDetailsSpan>Gender</CharDetailsSpan>
-                        <span>{gender}</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between">
-                        <CharDetailsSpan>Born</CharDetailsSpan>
-                        <span>{born}</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between">
-                        <CharDetailsSpan>Died</CharDetailsSpan>
-                        <span>{died}</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between">
-                        <CharDetailsSpan>Culture</CharDetailsSpan>
-                        <span>{culture}</span>
-                    </li>
-                </ul>
-        </>
-    )
 }
