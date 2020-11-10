@@ -18,7 +18,7 @@ export default class ItemList extends Component {
     onError = () => {
         this.setState({
             error: true,
-            charList: null
+            itemList: null
         })
     }
 
@@ -37,7 +37,7 @@ export default class ItemList extends Component {
 
     componentDidCatch(){
         this.setState({
-            charList: null,
+            itemList: null,
             error: true
         })
     }
