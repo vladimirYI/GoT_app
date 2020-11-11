@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Spinner from '../spinner';
 import ErrorMessage from '../errorMessage';
 
-
 const ItemListBlock = styled.ul`
     cursor: pointer;    
 `;

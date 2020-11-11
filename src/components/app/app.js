@@ -51,7 +51,7 @@ export default class App extends Component {
                                 onClick={this.toggleRandomChar}>Toggle</button>
                             </Col>
                         </Row>
-
+                        
                         <Route path='/characters' component={CharacterPage}/>
                         <Route path='/houses' component={HousesPage}/>
                         <Route path='/books' exact component={BooksPage}/>
@@ -61,7 +61,6 @@ export default class App extends Component {
                             return <BooksItem bookId={id}/>
                             }
                         }/>
-                        
                     </Container>
                 </div>
             </Router>
